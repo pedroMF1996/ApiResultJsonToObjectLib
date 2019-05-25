@@ -5,14 +5,18 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using System.Web.Script.Serialization;
+using APIJsonResultObjectLib.CustomException;
 
 namespace APIJsonResultObjectLib
 {
-    [Description("Use this class to convert a json file to a object")]
+    [Description("Use this class to convert a json file to a only one object")]
     public class JsonToObject
     {
         [DisplayName("Caminho do arquivo json")]
@@ -38,14 +42,31 @@ namespace APIJsonResultObjectLib
         public async Task<object> ConvertToObjectDefined()
         {
             JavaScriptSerializer serializador = new JavaScriptSerializer();
+            string rows;
             using (StringReader sr = new StringReader(SourcePath))
             {
-                string rows = await sr.ReadToEndAsync();
+                rows = await sr.ReadToEndAsync();
             }
 
-            Type t = Obj.GetType();
-            return serializador.Deserialize(SourcePath, Obj.GetType());
+            object result = serializador.Deserialize(rows, Obj.GetType());
+            
+            return result??throw new ExcecaoPersonalizada("Isn't possible generate your object");
+        }
+        
+        [Description("If your object hasn't a full construction use this, use object to receive the result")]
+        public async Task<object> ConvertToObjectUndefined()
+        {
+            JavaScriptSerializer serializador = new JavaScriptSerializer();
 
+            string rows;
+            using (StringReader sr = new StringReader(SourcePath))
+            {
+                rows = await sr.ReadToEndAsync();
+            }
+
+            object result = serializador.DeserializeObject(rows);
+
+            return result ?? throw new ExcecaoPersonalizada("Isn't possible generate your object");
         }
     }
 }
