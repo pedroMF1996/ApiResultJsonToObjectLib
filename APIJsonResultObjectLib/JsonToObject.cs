@@ -39,7 +39,7 @@ namespace APIJsonResultObjectLib
         }
 
         [Description("if your object has a full construction use this")]
-        public async Task<object> ConvertToObjectDefined()
+        public async Task<object> ConvertToObjectDefinedAsync()
         {
             JavaScriptSerializer serializador = new JavaScriptSerializer();
             string rows;
@@ -54,7 +54,7 @@ namespace APIJsonResultObjectLib
         }
         
         [Description("If your object hasn't a full construction use this, use object to receive the result")]
-        public async Task<object> ConvertToObjectUndefined()
+        public async Task<object> ConvertToObjectUndefinedAsync()
         {
             JavaScriptSerializer serializador = new JavaScriptSerializer();
 
